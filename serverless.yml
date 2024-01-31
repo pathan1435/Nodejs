@@ -1,0 +1,60 @@
+service: my-mongodb-serverless
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  yourFunctionName:
+    handler: handler.handler
+    timeout: 300
+    events:
+      - http:
+          path: /get
+          method: get
+          cors: true
+
+  getByid:
+    handler: getbyid.getbyid
+    timeout: 300
+    events:
+      - http:
+          path: /get/{id}
+          method: get
+          cors: true        
+
+
+  insertDataFunction:
+    handler: insert.insertDataHandler
+    timeout: 300
+    events:
+      - http:
+          path: insertData
+          method: post
+          cors: true 
+
+
+  updateSchoolNameFunction:
+    handler: update.updateSchoolNameHandler
+    timeout: 300
+    events:
+      - http:
+          path: updateSchoolName/{id}
+          method: put
+          cors: true    
+
+
+  deleteSchoolFunction:
+    handler: delete.deleteSchoolHandler
+    timeout: 300
+    events:
+      - http:
+          path: deleteSchool/{id}
+          method: delete
+          cors: true              
+
+
+plugins:
+  - serverless-offline
+
+
