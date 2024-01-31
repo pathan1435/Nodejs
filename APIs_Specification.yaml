@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  title: MongoDB Lambda API
+  description: API for MongoDB operations through Lambda function
+  version: 1.0.0
+servers:
+  - url: /prod
+paths:
+  /mongodb-data:
+    get:
+      summary: Retrieve MongoDB data
+      description: Retrieve all documents from the 'school' collection in the 'admin' database.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                statusCode: 200
+                body: '{"data": [...]}'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                statusCode: 500
+                body: '{"error": "Internal Server Error"}'
+    post:
+      summary: Insert Data
+      description: Insert data into the 'school' collection in the 'admin' database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                school_name:
+                  type: string
+                  description: The name of the school
+                grade:
+                  type: string
+                  description: The city of the school
+                # ... add more keys as needed
+              required:
+                - school_name
+                - grade
+                # ... add more required keys as needed
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                statusCode: 200
+                body: '{"message": "Data inserted successfully", "data": {"school_name": "Example School", "grade": "City"}}'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                statusCode: 500
+                body: '{"error": "Internal Server Error"}'
+  /mongodb-data/{id}:
+    get:
+      summary: Get Document by ID
+      description: Retrieve a document from the 'school' collection in the 'admin' database by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the document to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                statusCode: 200
+                body: '{"_id": "607ef52785c5689e3f9c6d75", "name": "Example School", "location": "City"}'
+        '404':
+          description: Document not found
+          content:
+            application/json:
+              example:
+                statusCode: 404
+                body: '{"error": "Document not found"}'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                statusCode: 500
+                body: '{"error": "Internal Server Error"}'
+    put:
+      summary: Update School Name by ID
+      description: Update the school name in the 'school' collection in the 'admin' database by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the school to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                school_name:
+                  type: string
+                  description: The updated school name
+              required:
+                - school_name
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                statusCode: 200
+                body: '{"message": "School name updated successfully", "data": {"school_name": "Updated Name"}}'
+        '404':
+          description: School not found
+          content:
+            application/json:
+              example:
+                statusCode: 404
+                body: '{"error": "School not found"}'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                statusCode: 500
+                body: '{"error": "Internal Server Error"}'
+    delete:
+      summary: Delete School by ID
+      description: Delete a school from the 'school' collection in the 'admin' database by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the school to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                statusCode: 200
+                body: '{"message": "School deleted successfully"}'
+        '404':
+          description: School not found
+          content:
+            application/json:
+              example:
+                statusCode: 404
+                body: '{"error": "School not found"}'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                statusCode: 500
+                body: '{"error": "Internal Server Error"}'
+components:
+  schemas:
+    MongoDBResult:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: HTTP status code
+        body:
+          type: string
+          description: Response body in JSON format
+    InsertDataRequest:
+      type: object
+      properties:
+        school_name:
+          type: string
+          description: The name of the school
+        grade:
+          type: string
+          description: The city of the school
+        # ... add more keys as needed
+    Document:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The ID of the document
+        name:
+          type: string
+          description: The name of the school
+        location:
+          type: string
+          description: The location of the school
+    UpdateSchoolNameRequest:
+      type: object
+      properties:
+        school_name:
+          type: string
+          description: The updated school name
+    DeleteSchoolResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The deletion success message
+        error:
+          type: string
+          description: The error message in case the school is not found or there is an internal server error
